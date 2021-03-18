@@ -13,6 +13,4 @@ public interface ContratoInterface {
     
     public double calculaSalario(double horasTrabalhadas);
     
-    public Contrato clone();
-    
 }

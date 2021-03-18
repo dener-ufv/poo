@@ -9,7 +9,7 @@ package com.ufv.folhadepagamento;
  *
  * @author dener
  */
-public abstract class Contrato implements ContratoInterface {
+public abstract class Contrato implements ContratoInterface, Cloneable {
     
     protected Funcionario funcionarioContext;
 
@@ -26,9 +26,6 @@ public abstract class Contrato implements ContratoInterface {
     }
 
     @Override
-    public Contrato clone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    public abstract Contrato clone();
     
 }

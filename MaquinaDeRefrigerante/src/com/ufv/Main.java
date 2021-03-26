@@ -14,7 +14,7 @@ public class Main {
         System.out.println("Esse sistema de exemplo nao tem uma repeticao para fazer compras");
         System.out.println("mas a ideia eh que um usuario possa ir comprando cada item e quando encerra a compra");
         System.out.println("ele recebe o troco. A cada compra, insercao de moeda ou insercao de refrigerante");
-        System.out.println("deve ser tratada uma excessao de valores invalidos. Todos os valores aqui sao salvos");
+        System.out.println("deve ser tratada uma excessao de valores invalidos. Todos os valores de dinheiro aqui sao salvos");
         System.out.println("em centavos");
         
         MaquinaDeRefrigerante maquina = new MaquinaDeRefrigerante();

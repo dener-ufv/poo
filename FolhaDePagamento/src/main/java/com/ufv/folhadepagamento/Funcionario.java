@@ -22,18 +22,6 @@ public class Funcionario {
         this.dataDeNascimento = (Data) dataDeNascimento.clone();
         this.filhosMenores = filhosMenores;
     }
-    
-    public void contratarHorista(double salario, Data dataDeAdmissao) {
-        this.contrato = new ContratoHorista(this);
-        this.salario = salario;
-        this.dataDeAdimissao = (Data) dataDeAdmissao.clone();
-    }
-    
-    public void contratarEfetivo(double salario, Data dataDeAdmissao) {
-        this.contrato = new ContratoEfetivo(this);
-        this.salario = salario;
-        this.dataDeAdimissao = dataDeAdmissao;
-    }
 
     public String getNome() {
         return nome;
@@ -59,7 +47,7 @@ public class Funcionario {
         return (Data) dataDeAdimissao.clone();
     }
 
-    public void setContrato(Contrato contrato) throws CloneNotSupportedException {
+    public void setContrato(Contrato contrato) {
         this.contrato = (Contrato) contrato.clone();
     }
 

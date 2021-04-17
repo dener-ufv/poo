@@ -5,16 +5,14 @@
  */
 package persistence.interfaces;
 
-import java.util.ArrayList;
 import model.entities.Produto;
 
 /**
  *
  * @author dener
  */
-public interface IProdutoDAO {
-    public void adicionarProduto(Produto produto);
-    public void editarProduto(Produto produto);
-    public Produto buscarPorNome(String nome);
-    public ArrayList<Produto> recuperarTodosProdutos();
+public interface IEstoqueDAO {
+    public void adicionarProdutoNoEstoque(Produto produto, int quantidade);
+    public void removerProdutoDoEstoque(Produto produto, int quantidade);
+    public int recuperarQuantidadeDoProduto(Produto produto);
 }

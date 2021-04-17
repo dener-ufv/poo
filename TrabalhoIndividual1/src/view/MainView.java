@@ -5,6 +5,7 @@
  */
 package view;
 
+import static java.lang.System.exit;
 import javax.swing.JPanel;
 
 /**
@@ -41,7 +42,8 @@ public class MainView extends javax.swing.JFrame {
         listarCliente = new javax.swing.JMenuItem();
         listarProdutos = new javax.swing.JMenuItem();
         listarVenda = new javax.swing.JMenuItem();
-        sair = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,13 +130,17 @@ public class MainView extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        sair.setText("Sair");
-        sair.addActionListener(new java.awt.event.ActionListener() {
+        jMenu3.setText("Janela");
+
+        jMenuItem1.setText("Sair");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sairActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenuBar1.add(sair);
+        jMenu3.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
 
@@ -161,7 +167,7 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastrarProdutoActionPerformed
 
     private void cadastrarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarVendaActionPerformed
-        // TODO add your handling code here:
+        this.updateView(new CadastrarVendaView(this));
     }//GEN-LAST:event_cadastrarVendaActionPerformed
 
     private void cadastrarTipoDeProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarTipoDeProdutoActionPerformed
@@ -184,9 +190,9 @@ public class MainView extends javax.swing.JFrame {
         this.updateView(new CadastrarCategoriaDeProdutoView(this));
     }//GEN-LAST:event_cadastrarCategoriaDeProdutoActionPerformed
 
-    private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_sairActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     public void updateView(JPanel viewPanel) {
         this.setContentPane(viewPanel);
@@ -238,10 +244,11 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JPanel contentPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem listarCliente;
     private javax.swing.JMenuItem listarProdutos;
     private javax.swing.JMenuItem listarVenda;
-    private javax.swing.JMenu sair;
     // End of variables declaration//GEN-END:variables
 }

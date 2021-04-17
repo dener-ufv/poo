@@ -7,7 +7,7 @@ package view;
 
 import controller.ClienteController;
 import javax.swing.JPanel;
-import persistence.local.ClienteDAO;
+import persistence.dao.ClienteDAO;
 
 /**
  *
@@ -45,11 +45,12 @@ public class CadastrarCliente extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         senhaCliente = new javax.swing.JPasswordField();
-        jLabel6 = new javax.swing.JLabel();
         salvarCliente = new javax.swing.JButton();
         cancelarCliente = new javax.swing.JButton();
         emailCliente = new javax.swing.JFormattedTextField();
-        enderecoCliente = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         jFormattedTextField1.setText("jFormattedTextField1");
 
@@ -71,8 +72,6 @@ public class CadastrarCliente extends javax.swing.JPanel {
 
         jLabel5.setText("Senha:");
 
-        jLabel6.setText("Endereço:");
-
         salvarCliente.setText("Salvar");
         salvarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,6 +83,17 @@ public class CadastrarCliente extends javax.swing.JPanel {
         cancelarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelarClienteActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel6.setText("Endereços:");
+
+        jButton1.setText("Adicionar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -107,15 +117,18 @@ public class CadastrarCliente extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel5)
                             .addComponent(senhaCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 236, Short.MAX_VALUE)
                         .addComponent(cancelarCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(salvarCliente))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(enderecoCliente))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -141,8 +154,10 @@ public class CadastrarCliente extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(enderecoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(salvarCliente)
                     .addComponent(cancelarCliente))
@@ -159,9 +174,8 @@ public class CadastrarCliente extends javax.swing.JPanel {
         String cpf = this.cpfCliente.getText();
         String email = this.emailCliente.getText();
         String senha = this.senhaCliente.getText();
-        String endereco = this.enderecoCliente.getText();
         
-        boolean success = this.clienteController.criarCliente(nome, cpf, email, senha, endereco);
+        boolean success = this.clienteController.criarCliente(nome, cpf, email, senha);
         if(success) {
             new AlertMessage("Cadastrar cliente", "Novo cliente cadastrado");
             this.context.updateView(new JPanel());
@@ -174,12 +188,17 @@ public class CadastrarCliente extends javax.swing.JPanel {
         this.context.updateView(new JPanel());
     }//GEN-LAST:event_cancelarClienteActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelarCliente;
     private javax.swing.JTextField cpfCliente;
     private javax.swing.JFormattedTextField emailCliente;
-    private javax.swing.JTextField enderecoCliente;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

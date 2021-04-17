@@ -6,7 +6,7 @@
 package controller;
 
 import java.util.ArrayList;
-import model.TipoDeProduto;
+import model.entities.TipoDeProduto;
 import persistence.interfaces.ITipoDeProdutoDAO;
 
 /**
@@ -14,7 +14,7 @@ import persistence.interfaces.ITipoDeProdutoDAO;
  * @author dener
  */
 public class TipoDeProdutoController {
-    private ITipoDeProdutoDAO tipoDeProdutoDAO;
+    private final ITipoDeProdutoDAO tipoDeProdutoDAO;
 
     public TipoDeProdutoController(ITipoDeProdutoDAO tipoDeProdutoDAO) {
         this.tipoDeProdutoDAO = tipoDeProdutoDAO;
@@ -22,6 +22,7 @@ public class TipoDeProdutoController {
 
     public boolean criarTipo(String nome, String descricao) {
         if(nome == null || nome.length() == 0) return false;
+        if(this.tipoDeProdutoDAO.buscarPorNome(nome) != null) return false;
         TipoDeProduto tipo = new TipoDeProduto(nome, descricao);
         tipoDeProdutoDAO.adicionarTipo(tipo);
         return true;

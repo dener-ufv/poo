@@ -6,7 +6,7 @@
 package controller;
 
 import java.util.ArrayList;
-import model.CategoriaDeProduto;
+import model.entities.CategoriaDeProduto;
 import persistence.interfaces.ICategoriaDeProdutoDAO;
 
 /**
@@ -14,7 +14,7 @@ import persistence.interfaces.ICategoriaDeProdutoDAO;
  * @author dener
  */
 public class CategoriaDeProdutoController {
-    private ICategoriaDeProdutoDAO categoriaDeProdutoDAO;
+    private final ICategoriaDeProdutoDAO categoriaDeProdutoDAO;
 
     public CategoriaDeProdutoController(ICategoriaDeProdutoDAO categoriaDeProdutoDAO) {
         this.categoriaDeProdutoDAO = categoriaDeProdutoDAO;
@@ -22,6 +22,7 @@ public class CategoriaDeProdutoController {
     
     public boolean criarCategoria(String nome, String descricao) {
         if(nome == null || nome.length() == 0) return false;
+        if(this.categoriaDeProdutoDAO.buscarPorNome(nome) != null) return false;
         CategoriaDeProduto categoriaDeProduto = new CategoriaDeProduto(nome, descricao);
         this.categoriaDeProdutoDAO.adicionarCategoria(categoriaDeProduto);
         return true;

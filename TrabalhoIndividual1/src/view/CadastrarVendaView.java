@@ -5,19 +5,104 @@
  */
 package view;
 
+import controller.ClienteController;
+import controller.ProdutoController;
+import controller.VendaController;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import model.entities.Cliente;
+import model.entities.Endereco;
+import model.entities.Produto;
+import model.entities.QuantidadeDeProduto;
+import persistence.dao.CategoriaDeProdutoDAO;
+import persistence.dao.ClienteDAO;
+import persistence.dao.EstoqueDAO;
+import persistence.dao.ProdutoDAO;
+import persistence.dao.TipoDeProdutoDAO;
+import persistence.dao.VendaDAO;
+
 /**
  *
  * @author dener
  */
 public class CadastrarVendaView extends javax.swing.JPanel {
+    
+    private final MainView context;
+    private final VendaController vendaController;
+    private final ClienteController clienteController;
+    private final ProdutoController produtoController;
+    
+    private final ArrayList<Cliente> arrCliente;
+    private final ArrayList<Produto> arrProdutos;
+    private ArrayList<QuantidadeDeProduto> arrItems;
+    
+    private DefaultListModel<String> modelProdutos = new DefaultListModel<>();
+    private DefaultListModel<String> modelCompras = new DefaultListModel<>();
+    
 
     /**
      * Creates new form CadastrarVendaView
+     * @param context
      */
-    public CadastrarVendaView() {
+    public CadastrarVendaView(MainView context) {
         initComponents();
+        this.context = context;
+        this.vendaController = new VendaController(new VendaDAO(),new EstoqueDAO());
+        this.clienteController = new ClienteController(new ClienteDAO());
+        this.produtoController = new ProdutoController(new ProdutoDAO(), new CategoriaDeProdutoDAO(), new TipoDeProdutoDAO(), new EstoqueDAO());
+        
+        this.arrCliente = clienteController.recuperarTodos();
+        this.arrProdutos = produtoController.recuperarTodos();
+        
+        
+        this.arrItems = new ArrayList<>();
+        
+        this.listaDeProdutos.setModel(modelProdutos);
+        this.listaDeCompra.setModel(modelCompras);
+        
+        updateClientes();
+        updateEnderecos();
+        updateListaDeCompra();
+        updateListaDeProdutos();
     }
-
+    
+    private void updateClientes() {
+        this.clientes.removeAllItems();
+        for(Cliente c : arrCliente) {
+            this.clientes.addItem(c.getNome() + " \t " + c.getCpf());
+        }
+    }
+    
+    private void updateEnderecos() {
+        this.enderecos.removeAllItems();
+        int index = this.clientes.getSelectedIndex();
+        if(index != -1) {
+            for(Endereco endereco : this.arrCliente.get(index).getEnderecos()) {
+                this.enderecos.addItem(endereco.getRua() + " - " + endereco.getNumero());
+            }
+        }
+    }
+    
+    private void updateListaDeProdutos() {
+        this.modelProdutos.removeAllElements();
+        for(Produto p : arrProdutos) {
+            this.modelProdutos.addElement(this.produtoController.estoqueDoProduto(p) + "x \t " + p.getNome());
+        }
+    }
+    
+    private void updateListaDeCompra() {
+        this.modelCompras.removeAllElements();
+        for(QuantidadeDeProduto item : arrItems) {
+            this.modelCompras.addElement(item.getQuantidade() + "x \t " + item.getProduto().getNome());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,27 +113,259 @@ public class CadastrarVendaView extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaDeProdutos = new javax.swing.JList<>();
+        salvar = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        enderecos = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        clientes = new javax.swing.JComboBox<>();
+        adicionarProduto = new javax.swing.JButton();
+        removerProduto = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listaDeCompra = new javax.swing.JList<>();
+        jLabel5 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Cadastro de Venda");
 
+        listaDeProdutos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(listaDeProdutos);
+
+        salvar.setText("Salvar");
+        salvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarActionPerformed(evt);
+            }
+        });
+
+        cancelar.setText("Cancelar");
+        cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Produtos:");
+
+        jLabel3.setText("Cliente:");
+
+        enderecos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel4.setText("Endereço:");
+
+        clientes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientesActionPerformed(evt);
+            }
+        });
+
+        adicionarProduto.setText(">>");
+        adicionarProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarProdutoActionPerformed(evt);
+            }
+        });
+
+        removerProduto.setText("<<");
+        removerProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerProdutoActionPerformed(evt);
+            }
+        });
+
+        listaDeCompra.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(listaDeCompra);
+
+        jLabel5.setText("Lista de compra:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(enderecos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(clientes, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(cancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(salvar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(adicionarProduto)
+                                    .addComponent(removerProduto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(0, 279, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(clientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(enderecos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 13, Short.MAX_VALUE)
+                        .addComponent(adicionarProduto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(removerProduto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(salvar)
+                            .addComponent(cancelar))))
+                .addGap(18, 18, 18))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
+        this.context.updateView(new JPanel());
+    }//GEN-LAST:event_cancelarActionPerformed
+
+    private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
+        
+        int clienteIndex = this.clientes.getSelectedIndex();
+        if(clienteIndex == -1) {
+            new AlertMessage("Cadastrar Venda", "É preciso selecionar um cliente");
+            return;
+        }
+        int enderecoIndex = this.enderecos.getSelectedIndex();
+        if(enderecoIndex == -1) {
+            new AlertMessage("Cadastrar Venda", "É preciso selecionar um edereço");
+            return;
+        }
+        if(this.arrItems.size() == 0) {
+            new AlertMessage("Cadastrar Venda", "É preciso selecionar pelo menos um item");
+            return;
+        }
+        Cliente cliente = this.arrCliente.get(clienteIndex);
+        Endereco endereco = cliente.getEnderecos().get(enderecoIndex);
+        Date data = new Date();
+        //LocalDateTime agora = LocalDateTime.now();
+        //String data = agora.getDayOfWeek().toString();;
+        //System.out.println(data);
+        this.vendaController.adicionarVenda(cliente, endereco, data, this.arrItems);
+        new AlertMessage("Cadastrar Venda", "Venda cadastrada com sucesso");
+    }//GEN-LAST:event_salvarActionPerformed
+
+    private void adicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProdutoActionPerformed
+        if(this.listaDeProdutos.getSelectedIndices().length != 1) {
+            new AlertMessage("Cadastrar Venda", "Selecione 1 produto para inserir");
+            return;
+        }
+        int index = this.listaDeProdutos.getSelectedIndex();
+        Produto produto = this.arrProdutos.get(index);
+        int indexArrItems = -1;
+        int quantidade = 0;
+        for(int i=0; i<this.arrItems.size(); i++) {
+            if(this.arrItems.get(i).getProduto().equals(produto)) {
+                indexArrItems = i;
+                quantidade = this.arrItems.get(i).getQuantidade();
+                break;
+            }
+        }
+        
+        if(quantidade == produtoController.estoqueDoProduto(produto)) {
+            new AlertMessage("Cadastrar Venda", "Produto fora de estoque");
+            return;
+        }
+        
+        if(indexArrItems == -1) {
+            this.arrItems.add(new QuantidadeDeProduto(produto, 1));
+        } else {
+            QuantidadeDeProduto q = this.arrItems.get(indexArrItems);
+            q.setQuantidade(q.getQuantidade() + 1);
+            this.arrItems.set(indexArrItems, q);
+        }
+        
+        updateListaDeCompra();
+    }//GEN-LAST:event_adicionarProdutoActionPerformed
+
+    private void removerProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerProdutoActionPerformed
+        if(this.listaDeCompra.getSelectedIndices().length != 1) {
+            new AlertMessage("Cadastrar Venda", "Selecione 1 item para remover");
+            return;
+        }
+        int index = this.listaDeCompra.getSelectedIndex();
+        QuantidadeDeProduto item = this.arrItems.get(index);
+        Produto produto = item.getProduto();
+        item.setQuantidade(item.getQuantidade() - 1);
+        if(item.getQuantidade() != 0) {
+            this.arrItems.set(index, item);
+        } else {
+            this.arrItems.remove(index);
+        }
+        
+        updateListaDeCompra();
+        if(item.getQuantidade() != 0) {
+            this.listaDeCompra.setSelectedIndex(index);
+        }
+    }//GEN-LAST:event_removerProdutoActionPerformed
+
+    private void clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientesActionPerformed
+        this.updateEnderecos();
+    }//GEN-LAST:event_clientesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton adicionarProduto;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JComboBox<String> clientes;
+    private javax.swing.JComboBox<String> enderecos;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> listaDeCompra;
+    private javax.swing.JList<String> listaDeProdutos;
+    private javax.swing.JButton removerProduto;
+    private javax.swing.JButton salvar;
     // End of variables declaration//GEN-END:variables
 }

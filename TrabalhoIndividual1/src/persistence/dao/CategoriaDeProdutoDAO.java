@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistence.local;
+package persistence.dao;
 
 import java.util.ArrayList;
-import model.CategoriaDeProduto;
+import model.entities.CategoriaDeProduto;
 import persistence.interfaces.ICategoriaDeProdutoDAO;
+import persistence.local.DatabaseSingleton;
 
 /**
  *
@@ -19,13 +20,20 @@ public class CategoriaDeProdutoDAO implements ICategoriaDeProdutoDAO {
     
     @Override
     public void adicionarCategoria(CategoriaDeProduto categoriaDeProduto) {
-        categoriaDeProduto.setCodigo(db.getNextCategoriaDeProdutoID()); 
         db.categoriaDeProdutos.add(categoriaDeProduto);
     }
 
     @Override
     public ArrayList<CategoriaDeProduto> recuperarTodasCategorias() {
         return db.categoriaDeProdutos;
+    }
+
+    @Override
+    public CategoriaDeProduto buscarPorNome(String nome) {
+        for(CategoriaDeProduto categoria : db.categoriaDeProdutos) {
+            if(categoria.getNome().equals(nome)) return categoria;
+        }
+        return null;
     }
     
     

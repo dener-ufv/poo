@@ -6,7 +6,7 @@
 package persistence.interfaces;
 
 import java.util.ArrayList;
-import model.Cliente;
+import model.entities.Cliente;
 
 /**
  *
@@ -16,5 +16,7 @@ public interface IClienteDAO {
     void adicionarCliente(Cliente cliente);
     void editarCliente(Cliente cliente);
     Cliente buscarPorID(int clienteID);
+    Cliente buscarPorCPF(String cpf);
+    Cliente buscarPorEmail(String email);
     ArrayList<Cliente> recuperarTodos();
 }

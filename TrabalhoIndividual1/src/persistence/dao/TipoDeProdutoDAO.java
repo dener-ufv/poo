@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistence.local;
+package persistence.dao;
 
 import java.util.ArrayList;
-import model.TipoDeProduto;
+import model.entities.TipoDeProduto;
 import persistence.interfaces.ITipoDeProdutoDAO;
+import persistence.local.DatabaseSingleton;
 
 /**
  *
@@ -19,7 +20,6 @@ public class TipoDeProdutoDAO implements ITipoDeProdutoDAO {
 
     @Override
     public void adicionarTipo(TipoDeProduto tipoDeProduto) {
-        tipoDeProduto.setCodigo(db.getNextTipoDeProdutoID());
         db.tiposDeProdutos.add(tipoDeProduto);
     }
 
@@ -27,5 +27,12 @@ public class TipoDeProdutoDAO implements ITipoDeProdutoDAO {
     public ArrayList<TipoDeProduto> recuperarTodosTipos() {
         return db.tiposDeProdutos;
     }
-    
+
+    @Override
+    public TipoDeProduto buscarPorNome(String nome) {
+        for(TipoDeProduto tipo : db.tiposDeProdutos) {
+            if(tipo.getNome().equals(nome)) return tipo;
+        }
+        return null;
+    }
 }

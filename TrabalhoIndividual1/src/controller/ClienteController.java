@@ -5,7 +5,8 @@
  */
 package controller;
 
-import model.Cliente;
+import java.util.ArrayList;
+import model.entities.Cliente;
 import persistence.interfaces.IClienteDAO;
 
 /**
@@ -19,11 +20,13 @@ public class ClienteController {
         this.clienteDAO = clienteDAO;
     }
     
-    public boolean criarCliente(String nome, String cpf, String email, String senha, String endereco) {
-        if(nome == null || cpf == null || email == null || senha == null || endereco == null) return false;
-        if(nome.length() == 0 || !validateCPF(cpf) || email.length() == 0 || senha.length() == 0 || endereco.length() == 0) return false;
-        Cliente c = new Cliente(cpf, nome, email, senha, endereco);
-        clienteDAO.adicionarCliente(c);
+    public boolean criarCliente(String nome, String cpf, String email, String senha) {
+        if(nome == null || cpf == null || email == null || senha == null) return false;
+        if(nome.length() == 0 || !validateCPF(cpf) || email.length() == 0 || senha.length() == 0) return false;
+        if(clienteDAO.buscarPorCPF(cpf) != null) return false;
+        if(clienteDAO.buscarPorEmail(email) != null) return false;
+        Cliente cliente = new Cliente(cpf, nome, email, senha);
+        clienteDAO.adicionarCliente(cliente);
         return true;
     }
     
@@ -31,12 +34,8 @@ public class ClienteController {
         return false;
     }
     
-    public boolean adicionarEndereco(int clienteID, String endereco) {
-        if(endereco == null || endereco.length() == 0) return false;
-        Cliente cliente = clienteDAO.buscarPorID(clienteID);
-        
-        clienteDAO.editarCliente(cliente);
-        return true;
+    public ArrayList<Cliente> recuperarTodos() {
+        return clienteDAO.recuperarTodos();
     }
     
     private boolean validateCPF(String cpf) {

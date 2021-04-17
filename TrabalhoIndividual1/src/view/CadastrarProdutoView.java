@@ -9,15 +9,13 @@ import controller.CategoriaDeProdutoController;
 import controller.ProdutoController;
 import controller.TipoDeProdutoController;
 import java.util.ArrayList;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import model.CategoriaDeProduto;
-import model.TipoDeProduto;
-import persistence.local.CategoriaDeProdutoDAO;
-import persistence.local.ProdutoDAO;
-import persistence.local.TipoDeProdutoDAO;
+import model.entities.CategoriaDeProduto;
+import model.entities.TipoDeProduto;
+import persistence.dao.CategoriaDeProdutoDAO;
+import persistence.dao.EstoqueDAO;
+import persistence.dao.ProdutoDAO;
+import persistence.dao.TipoDeProdutoDAO;
 
 /**
  *
@@ -40,7 +38,7 @@ public class CadastrarProdutoView extends javax.swing.JPanel {
     public CadastrarProdutoView(MainView context) {
         initComponents();
         this.context = context;
-        this.produtoController = new ProdutoController(new ProdutoDAO());
+        this.produtoController = new ProdutoController(new ProdutoDAO(), new CategoriaDeProdutoDAO(), new TipoDeProdutoDAO(), new EstoqueDAO());
         this.categoriaDeProdutoController = new CategoriaDeProdutoController(new CategoriaDeProdutoDAO());
         this.tipoDeProdutoController = new TipoDeProdutoController(new TipoDeProdutoDAO());
         
@@ -162,12 +160,14 @@ public class CadastrarProdutoView extends javax.swing.JPanel {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(salvar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7))
+                            .addComponent(jLabel7)
                             .addGap(134, 134, 134))
-                        .addComponent(descricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)))
+                        .addComponent(descricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -217,15 +217,15 @@ public class CadastrarProdutoView extends javax.swing.JPanel {
 
     private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
 
-        String nome = this.nome.getText();
-        String descricao = this.descricao.getText();
-        String precoStr = this.valorUnitario.getText();
-        String estoqueStr = this.estoque.getText();
-        double preco = 0;
-        int estoque = 0;
+        String nomeProduto = this.nome.getText();
+        String descricaoProduto = this.descricao.getText();
+        String precoString = this.valorUnitario.getText();
+        String estoqueString = this.estoque.getText();
+        double precoProduto;
+        int estoqueProduto;
         try {
-            preco = Double.parseDouble(this.valorUnitario.getText());
-            estoque = Integer.parseInt(this.estoque.getText());
+            precoProduto = Double.parseDouble(this.valorUnitario.getText());
+            estoqueProduto = Integer.parseInt(this.estoque.getText());
         } catch (Exception e) {
             new AlertMessage("Cadastro de Produto", "Preço ou estoque invalidos");
             return;
@@ -238,9 +238,9 @@ public class CadastrarProdutoView extends javax.swing.JPanel {
             return;
         }
         
-        int categoriaID = this.categoriasDeProduto.get(categoriaIndex).getCodigo();
-        int tipoID = this.tiposDeProduto.get(tipoIndex).getCodigo();
-        boolean success = produtoController.criarProduto(nome, descricao, preco, estoque, categoriaID, tipoID);
+        CategoriaDeProduto categoriaDeProduto = this.categoriasDeProduto.get(categoriaIndex);
+        TipoDeProduto tipoDeProduto = this.tiposDeProduto.get(tipoIndex);
+        boolean success = this.produtoController.criarProduto(nomeProduto, descricaoProduto, precoProduto, estoqueProduto, categoriaDeProduto, tipoDeProduto);
         
         if(success) {
             this.context.updateView(new JPanel());
@@ -251,9 +251,7 @@ public class CadastrarProdutoView extends javax.swing.JPanel {
     }//GEN-LAST:event_salvarActionPerformed
 
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
-        this.context.setContentPane(new JPanel());
-        this.context.invalidate();
-        this.context.validate();
+        this.context.updateView(new JPanel());
     }//GEN-LAST:event_cancelarActionPerformed
 
     private void valorUnitarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valorUnitarioActionPerformed

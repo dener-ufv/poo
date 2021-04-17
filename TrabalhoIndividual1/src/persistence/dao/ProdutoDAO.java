@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package persistence.local;
+package persistence.dao;
 
 import java.util.ArrayList;
-import model.Produto;
+import model.entities.Produto;
 import persistence.interfaces.IProdutoDAO;
+import persistence.local.DatabaseSingleton;
 
 /**
  *
@@ -16,17 +17,19 @@ import persistence.interfaces.IProdutoDAO;
 public class ProdutoDAO implements IProdutoDAO {
     
     private final DatabaseSingleton db = DatabaseSingleton.getInstance();
+    private static int produtoID = 1;
     
     @Override
     public void adicionarProduto(Produto produto) {
-        produto.setCodigo(db.getNextProdutoID());
+        produto.setProdutoID(produtoID++);
         db.produtos.add(produto);
     }
 
     @Override
     public void editarProduto(Produto produto) {
         for(int i=0; i<db.produtos.size(); i++) {
-            if(db.produtos.get(i).getCodigo() == produto.getCodigo()) {
+            Produto p = db.produtos.get(i);
+            if(p.getProdutoID() == produto.getProdutoID()) {
                 db.produtos.set(i, produto);
                 break;
             }

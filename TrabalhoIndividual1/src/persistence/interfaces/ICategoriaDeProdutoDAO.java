@@ -6,7 +6,7 @@
 package persistence.interfaces;
 
 import java.util.ArrayList;
-import model.CategoriaDeProduto;
+import model.entities.CategoriaDeProduto;
 
 /**
  *
@@ -15,4 +15,5 @@ import model.CategoriaDeProduto;
 public interface ICategoriaDeProdutoDAO {
     void adicionarCategoria(CategoriaDeProduto categoriaDeProduto);
     ArrayList<CategoriaDeProduto> recuperarTodasCategorias();
+    CategoriaDeProduto buscarPorNome(String nome);
 }

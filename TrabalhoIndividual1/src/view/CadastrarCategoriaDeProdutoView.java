@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import persistence.interfaces.ICategoriaDeProdutoDAO;
-import persistence.local.CategoriaDeProdutoDAO;
+import persistence.dao.CategoriaDeProdutoDAO;
 
 /**
  *

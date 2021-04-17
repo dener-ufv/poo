@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package model.entities;
 
 import java.util.ArrayList;
 
@@ -12,31 +12,23 @@ import java.util.ArrayList;
  * @author dener
  */
 public class Cliente {
-    int codigo;
-    String cpf;
-    String nome;
-    String email;
-    String senha;
-    ArrayList<Integer> enderecoIDs;
+    private int clienteID;
+    private String cpf;
+    private String nome;
+    private String email;
+    private String senha;
+    private ArrayList<Endereco> enderecos;
 
     public Cliente(String cpf, String nome, String email, String senha) {
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.enderecoIDs = new ArrayList<>();
+        this.enderecos = new ArrayList<>();
     }
     
-    public void adicionarEndereco(int enderecoID) {
-        this.enderecoIDs.add(enderecoID);
-    }
-    
-    public Cliente(String cpf, String nome, String email, String senha, String endereco) {
-        this(cpf, nome, email, senha);
-    }
-
-    public int getCodigo() {
-        return codigo;
+    public void adicionarEndereco(Endereco endereco) {
+        this.enderecos.add(endereco);
     }
 
     public String getCpf() {
@@ -54,6 +46,10 @@ public class Cliente {
     public String getSenha() {
         return senha;
     }
+    
+    public ArrayList<Endereco> getEnderecos() {
+        return this.enderecos;
+    }
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
@@ -70,20 +66,12 @@ public class Cliente {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+
+    public int getClienteID() {
+        return clienteID;
     }
-    
-    private class Endereco {
-        private final String endereco;
-        
-        public Endereco(String endereco) {
-            this.endereco = endereco;
-        }
-        
-        public String getEndereco() {
-            return this.endereco;
-        }
+
+    public void setClienteID(int clienteID) {
+        this.clienteID = clienteID;
     }
 }

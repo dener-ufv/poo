@@ -13,9 +13,9 @@ public class Endereco {
     private String rua;
     private String bairro;
     private String cidade;
-    private int numero;
+    private String numero;
 
-    public Endereco(String rua, String bairro, String cidade, int numero) {
+    public Endereco(String rua, String bairro, String cidade, String numero) {
         this.rua = rua;
         this.bairro = bairro;
         this.cidade = cidade;
@@ -34,7 +34,7 @@ public class Endereco {
         return cidade;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
     

@@ -5,17 +5,30 @@
  */
 package view;
 
+import controller.ClienteController;
+import javax.swing.JPanel;
+import model.entities.Cliente;
+import persistence.dao.ClienteDAO;
+
 /**
  *
  * @author dener
  */
-public class AdicionarEnderecoView extends javax.swing.JFrame {
+public class CadastrarEnderecoView extends javax.swing.JPanel {
 
+    private final MainView context;
+    private final Cliente cliente;
+    private final ClienteController clienteController;
+    
     /**
-     * Creates new form AdicionarEnderecoView
+     * Creates new form EditarEnderecoVIew
      */
-    public AdicionarEnderecoView() {
+    public CadastrarEnderecoView(MainView context, Cliente cliente) {
         initComponents();
+        this.context = context;
+        this.cliente = cliente;
+        
+        this.clienteController = new ClienteController(new ClienteDAO());
     }
 
     /**
@@ -36,112 +49,91 @@ public class AdicionarEnderecoView extends javax.swing.JFrame {
         rua = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         numero = new javax.swing.JTextField();
-        salvar = new javax.swing.JButton();
-        cancelar = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        salvarEndereco = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Adicionar Endereço");
+        jLabel1.setText("Cadastrar Endereço");
 
         jLabel2.setText("Cidade:");
 
         jLabel3.setText("Bairro:");
 
-        bairro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bairroActionPerformed(evt);
-            }
-        });
-
         jLabel4.setText("Rua:");
 
         jLabel5.setText("Número:");
 
-        salvar.setText("Salvar");
-        salvar.addActionListener(new java.awt.event.ActionListener() {
+        salvarEndereco.setText("salvar");
+        salvarEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                salvarActionPerformed(evt);
+                salvarEnderecoActionPerformed(evt);
             }
         });
 
-        cancelar.setText("Cancelar");
-        cancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(76, 76, 76)
+                .addGap(56, 56, 56)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(cancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(salvar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(salvarEndereco)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel5)
+                        .addComponent(numero, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4)
+                        .addComponent(rua, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
+                        .addComponent(bairro, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)
-                        .addComponent(cidade)
-                        .addComponent(bairro)
-                        .addComponent(rua)
-                        .addComponent(numero, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                        .addComponent(cidade, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(salvar)
-                    .addComponent(cancelar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(salvarEndereco)
                 .addContainerGap())
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void bairroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bairroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_bairroActionPerformed
-
-    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_cancelarActionPerformed
-
-    private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
+    private void salvarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarEnderecoActionPerformed
+        String cidade = this.cidade.getText();
+        String bairro = this.bairro.getText();
+        String rua = this.rua.getText();
+        String numero = this.numero.getText();
         
-    }//GEN-LAST:event_salvarActionPerformed
+        boolean status = clienteController.adicionarEndereco(cliente, cidade, bairro, rua, numero);
+        if(status) {
+            new AlertMessage("Adicionar Endereço", "Endereço adicionado");
+            this.context.updateView(new JPanel());
+        } else {
+            new AlertMessage("Adicionar Endereço", "Endereço inválido");
+        }
+    }//GEN-LAST:event_salvarEnderecoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bairro;
-    private javax.swing.JButton cancelar;
     private javax.swing.JTextField cidade;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -151,5 +143,7 @@ public class AdicionarEnderecoView extends javax.swing.JFrame {
     private javax.swing.JTextField numero;
     private javax.swing.JTextField rua;
     private javax.swing.JButton salvar;
+    private javax.swing.JButton salvar1;
+    private javax.swing.JButton salvarEndereco;
     // End of variables declaration//GEN-END:variables
 }

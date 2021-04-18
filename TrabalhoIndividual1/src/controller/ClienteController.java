@@ -7,6 +7,7 @@ package controller;
 
 import java.util.ArrayList;
 import model.entities.Cliente;
+import model.entities.Endereco;
 import persistence.interfaces.IClienteDAO;
 
 /**
@@ -30,8 +31,29 @@ public class ClienteController {
         return true;
     }
     
-    public boolean editarCliente(int clienteID, String nome, String cpf, String email, String senha) {
-        return false;
+    public boolean editarCliente(int clienteID, String nome, String cpf, String email, String senha, ArrayList<Endereco> enderecos) {
+        if(nome.length() == 0 || email.length() == 0 || senha.length() == 0) return false;
+        Cliente c = clienteDAO.buscarPorEmail(email);
+        if( c != null && c.getClienteID() != clienteID) return false;
+        
+        Cliente cliente = new Cliente(cpf, nome, email, senha);
+        cliente.setClienteID(clienteID);
+        for(Endereco e : enderecos) cliente.adicionarEndereco(e);
+        
+        this.clienteDAO.editarCliente(cliente);
+        
+        return true;
+    }
+    
+    public boolean adicionarEndereco(Cliente cliente, String cidade, String bairro, String rua, String numero) {
+        if(cidade == null || bairro == null || rua == null || numero == null) return false;
+        if(cidade.length() == 0 || bairro.length() == 0 || rua.length() == 0 || numero.length() == 0) return false;
+        
+        Endereco endereco = new Endereco(rua, bairro, cidade, numero);
+        cliente.adicionarEndereco(endereco);
+        
+        clienteDAO.editarCliente(cliente);
+        return true;
     }
     
     public ArrayList<Cliente> recuperarTodos() {

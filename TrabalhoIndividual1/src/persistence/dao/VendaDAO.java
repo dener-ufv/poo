@@ -26,6 +26,16 @@ public class VendaDAO implements IVendaDAO {
     }
 
     @Override
+    public void editarVenda(Venda venda) {
+        for(int i=0; i<this.db.vendas.size(); i++) {
+            if(this.db.vendas.get(i).getVendaID() == venda.getVendaID()) {
+                this.db.vendas.set(i, venda);
+                break;
+            }
+        }
+    }
+    
+    @Override
     public ArrayList<Venda> buscarPorDataMinima(Date minDate) {
         ArrayList<Venda> vendas = new ArrayList<>();
         for(Venda v : this.db.vendas) {

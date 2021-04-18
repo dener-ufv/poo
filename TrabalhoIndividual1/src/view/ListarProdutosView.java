@@ -21,7 +21,8 @@ import persistence.dao.TipoDeProdutoDAO;
 public class ListarProdutosView extends javax.swing.JPanel {
     
     private final MainView context;
-    private ArrayList<Produto> arrProdutos;
+    private final ArrayList<Produto> arrProdutos;
+    private ArrayList<Produto> produtosMostrados;
     private final DefaultListModel<String> modelProdutos;
     private final ProdutoController produtoController;
 
@@ -35,13 +36,15 @@ public class ListarProdutosView extends javax.swing.JPanel {
         this.produtoController = new ProdutoController(new ProdutoDAO(), new CategoriaDeProdutoDAO(), new TipoDeProdutoDAO(), new EstoqueDAO());
         arrProdutos = produtoController.recuperarTodos();
         
+        this.produtosMostrados = (ArrayList<Produto>) this.arrProdutos.clone();
+        
         this.produtos.setModel(modelProdutos);
-        updateListaDeProdutos(arrProdutos);
+        updateListaDeProdutos();
     }
     
-    private void updateListaDeProdutos(ArrayList<Produto> arr) {
+    private void updateListaDeProdutos() {
         this.modelProdutos.removeAllElements();
-        for(Produto p : arr) {
+        for(Produto p : this.produtosMostrados) {
             this.modelProdutos.addElement(this.produtoController.estoqueDoProduto(p) + "x \t " + p.getNome());
         }
     }
@@ -62,6 +65,7 @@ public class ListarProdutosView extends javax.swing.JPanel {
         filtrar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        editar = new javax.swing.JButton();
 
         nome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,6 +95,13 @@ public class ListarProdutosView extends javax.swing.JPanel {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Listar produtos");
 
+        editar.setText("Editar");
+        editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,14 +109,16 @@ public class ListarProdutosView extends javax.swing.JPanel {
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filtrar))
-                    .addComponent(jLabel2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(editar)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(filtrar))
+                        .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -118,20 +131,18 @@ public class ListarProdutosView extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filtrar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 61, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editar)
+                .addGap(0, 15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeActionPerformed
-        String nomeCliente = this.nome.getText();
 
-        if(nomeCliente.length() == 0) {
-            updateListaDeProdutos(arrProdutos);
-        }
     }//GEN-LAST:event_nomeActionPerformed
 
     private void filtrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarActionPerformed
@@ -139,26 +150,40 @@ public class ListarProdutosView extends javax.swing.JPanel {
 
         if(nomeCliente.length() == 0) {
             new AlertMessage("Listar Produtos", "Digite o nome do produto");
-            updateListaDeProdutos(arrProdutos);
+            this.produtosMostrados = (ArrayList<Produto>) this.arrProdutos.clone();
+            updateListaDeProdutos();
         } else {
-            ArrayList<Produto> ans = new ArrayList<>();
+            this.produtosMostrados.clear();
             for(Produto p : this.arrProdutos) {
                 if(p.getNome().equals(nomeCliente)) {
-                    ans.add(p);
+                    this.produtosMostrados.add(p);
                 }
             }
 
-            if(ans.size() == 0) {
-                updateListaDeProdutos(arrProdutos);
+            if(this.produtosMostrados.size() == 0) {
+                this.produtosMostrados = (ArrayList<Produto>) this.arrProdutos.clone();
+                updateListaDeProdutos();
                 new AlertMessage("Listar Produtos", "Nenhum Produto Encontrado");
             } else {
-                updateListaDeProdutos(ans);
+                updateListaDeProdutos();
             }
         }
     }//GEN-LAST:event_filtrarActionPerformed
 
+    private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
+        if( this.produtos.getSelectedIndices().length != 1 ) {
+            new AlertMessage("Listar Produtos", "selecione 1 produto");
+            return;
+        }
+        int index = this.produtos.getSelectedIndex();
+        Produto produto = this.produtosMostrados.get(index);
+        
+        this.context.updateView(new EditarProdutoView(context, produto));
+    }//GEN-LAST:event_editarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton editar;
     private javax.swing.JButton filtrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

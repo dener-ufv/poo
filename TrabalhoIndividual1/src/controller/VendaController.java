@@ -10,6 +10,7 @@ import java.util.Date;
 import model.entities.Cliente;
 import model.entities.Endereco;
 import model.entities.QuantidadeDeProduto;
+import model.entities.StatusDaVenda;
 import model.entities.Venda;
 import persistence.interfaces.IEstoqueDAO;
 import persistence.interfaces.IVendaDAO;
@@ -37,6 +38,18 @@ public class VendaController {
         return true;
     }
     
+    public boolean editarStatusVenda(Venda v, StatusDaVenda status) {
+        if(status == StatusDaVenda.PENDENTE) {
+            v.vendaPendente();
+        } else if(status == StatusDaVenda.EM_ANDAMENTO) {
+            v.vendaEmAndamento();
+        } else {
+            v.vendaEntregue();
+        }
+        this.vendaDAO.editarVenda(v);
+        return true;
+    }
+    
     public ArrayList<Venda> buscarPorData(String diaInicio, String mesInicio, String anoInicio, String diaFinal, String mesFinal, String anoFinal) {
         Date dataInicio = parseData(diaInicio, mesInicio, anoInicio);
         Date dataFinal = parseData(diaFinal, mesFinal, anoFinal);
@@ -48,8 +61,12 @@ public class VendaController {
         } else if(dataFinal != null) {
             return vendaDAO.buscarPorDataMaxima(dataFinal);
         } else {
-            return vendaDAO.recuperarTodas();
+            return null;
         }
+    }
+    
+    public ArrayList<Venda> recuperarTodas() {
+        return this.vendaDAO.recuperarTodas();
     }
     
     private Date parseData(String dia, String mes, String ano) {
@@ -59,7 +76,7 @@ public class VendaController {
             int m = Integer.parseInt(mes);
             int a = Integer.parseInt(ano);
             
-            data = new Date(a, m-1, d, 0, 0, 0);
+            data = new Date(a-1900, m-1, d, 0, 0, 0);
         } catch(Exception e) {
             
         }

@@ -15,6 +15,7 @@ import model.entities.Venda;
  */
 public interface IVendaDAO {
     void adicionarVenda(Venda venda);
+    void editarVenda(Venda venda);
     ArrayList<Venda> buscarPorDataMinima(Date minDate);
     ArrayList<Venda> buscarPorDataMaxima(Date maxDate);
     ArrayList<Venda> buscarPorIntervalo(Date minDate, Date maxDate);

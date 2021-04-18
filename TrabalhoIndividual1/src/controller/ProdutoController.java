@@ -47,6 +47,10 @@ public class ProdutoController {
         
         return true;
     }
+    
+    public void adicionarNoEstoque(Produto produto, int quantidade) {
+        this.estoqueDAO.adicionarProdutoNoEstoque(produto, quantidade);
+    }
 
     public Produto buscarPorNome(String nome) {
         return produtoDAO.buscarPorNome(nome);

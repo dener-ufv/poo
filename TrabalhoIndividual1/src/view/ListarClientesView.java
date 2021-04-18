@@ -19,8 +19,9 @@ import persistence.dao.ClienteDAO;
 public class ListarClientesView extends javax.swing.JPanel {
     private final MainView context; 
     private ClienteController clienteController;
-    private ArrayList<Cliente> arrClientes;
+    private ArrayList<Cliente> allClientes;
     
+    private ArrayList<Cliente> clientesMostrados;
     private final DefaultListModel<String> clienteModel;
     
     /**
@@ -31,17 +32,19 @@ public class ListarClientesView extends javax.swing.JPanel {
         this.context = context;
         
         this.clienteController = new ClienteController(new ClienteDAO());
-        this.arrClientes = clienteController.recuperarTodos();
+        this.allClientes = clienteController.recuperarTodos();
         
         this.clienteModel = new DefaultListModel<>();
         this.clientes.setModel(clienteModel);
         
-        updateListaDeClientes(arrClientes);
+        this.clientesMostrados = (ArrayList<Cliente>) allClientes.clone();
+        
+        updateListaDeClientes();
     }
     
-    private void updateListaDeClientes(ArrayList<Cliente> arr) {
+    private void updateListaDeClientes() {
         this.clienteModel.removeAllElements();
-        for(Cliente c : arr) {
+        for(Cliente c : this.clientesMostrados) {
             this.clienteModel.addElement(c.getNome() + " - " + c.getCpf());
         }
     }
@@ -62,6 +65,8 @@ public class ListarClientesView extends javax.swing.JPanel {
         clientes = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
         filtrar = new javax.swing.JButton();
+        editar = new javax.swing.JButton();
+        adicionarEndereco = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -91,6 +96,22 @@ public class ListarClientesView extends javax.swing.JPanel {
             }
         });
 
+        editar.setText("Editar");
+        editar.setActionCommand("editar");
+        editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarActionPerformed(evt);
+            }
+        });
+
+        adicionarEndereco.setText("+ Endereço");
+        adicionarEndereco.setActionCommand("addEndereco");
+        adicionarEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adicionarEnderecoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,12 +122,17 @@ public class ListarClientesView extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(nome)
+                            .addComponent(adicionarEndereco)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(filtrar))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(editar))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(nome)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filtrar))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -122,17 +148,17 @@ public class ListarClientesView extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editar)
+                    .addComponent(adicionarEndereco))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void nomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeActionPerformed
-        String nomeCliente = this.nome.getText();
-        
-        if(nomeCliente.length() == 0) {
-            updateListaDeClientes(arrClientes);
-        }
+
     }//GEN-LAST:event_nomeActionPerformed
 
     private void filtrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarActionPerformed
@@ -140,27 +166,51 @@ public class ListarClientesView extends javax.swing.JPanel {
         
         if(nomeCliente.length() == 0) {
             new AlertMessage("Listar Clientes", "Digite o nome do cliente");
-            updateListaDeClientes(arrClientes);
+            this.clientesMostrados = (ArrayList<Cliente>) allClientes.clone();
+            updateListaDeClientes();
         } else {
-            ArrayList<Cliente> ans = new ArrayList<>();
-            for(Cliente c : arrClientes) {
+            this.clientesMostrados.clear();
+            for(Cliente c : allClientes) {
                 if(c.getNome().equals(nomeCliente)) {
-                    ans.add(c);
+                    this.clientesMostrados.add(c);
                 }
             }
             
-            if(ans.size() == 0) {
-                updateListaDeClientes(arrClientes);
+            if(this.clientesMostrados.size() == 0) {
+                this.clientesMostrados = (ArrayList<Cliente>) allClientes.clone();
+                updateListaDeClientes();
                 new AlertMessage("Listar Clientes", "Nenhum Cliente Encontrado");
             } else {
-                updateListaDeClientes(ans);
+                updateListaDeClientes();
             }
         }
     }//GEN-LAST:event_filtrarActionPerformed
 
+    private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
+        if(this.clientes.getSelectedIndices().length != 1) {
+            new AlertMessage("Listar Cliente", "Selecione 1 cliente para editar");
+            return;
+        }
+        
+        int index = this.clientes.getSelectedIndex();
+        this.context.updateView(new EditarClienteView(this.context, this.clientesMostrados.get(index)));
+    }//GEN-LAST:event_editarActionPerformed
+
+    private void adicionarEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarEnderecoActionPerformed
+        if(this.clientes.getSelectedIndices().length != 1) {
+            new AlertMessage("Listar Cliente", "Selecione 1 cliente para adicionar endereço");
+            return;
+        }
+        
+        int index = this.clientes.getSelectedIndex();
+        this.context.updateView(new CadastrarEnderecoView(this.context, this.clientesMostrados.get(index)));
+    }//GEN-LAST:event_adicionarEnderecoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton adicionarEndereco;
     private javax.swing.JList<String> clientes;
+    private javax.swing.JButton editar;
     private javax.swing.JButton filtrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

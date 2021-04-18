@@ -5,6 +5,14 @@
  */
 package view;
 
+import controller.VendaController;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.DefaultListModel;
+import model.entities.Venda;
+import persistence.dao.EstoqueDAO;
+import persistence.dao.VendaDAO;
+
 /**
  *
  * @author dener
@@ -12,6 +20,10 @@ package view;
 public class ListarVendasView extends javax.swing.JPanel {
 
     private final MainView context;
+    private final VendaController vendaController;
+    private final DefaultListModel<String> modelVendas;
+    private final ArrayList<Venda> allVendas;
+    private ArrayList<Venda> vendasMostradas;
     
     /**
      * Creates new form ListarVendasView
@@ -19,6 +31,22 @@ public class ListarVendasView extends javax.swing.JPanel {
     public ListarVendasView(MainView context) {
         initComponents();
         this.context = context;
+        this.vendaController = new VendaController(new VendaDAO(), new EstoqueDAO());
+        this.modelVendas = new DefaultListModel<>();
+        
+        this.allVendas = vendaController.recuperarTodas();
+        this.vendas.setModel(modelVendas);
+        
+        this.vendasMostradas = (ArrayList<Venda>) this.allVendas.clone();
+        
+        updateListaVendas();
+    } 
+    
+    private void updateListaVendas() {
+        this.modelVendas.removeAllElements();
+        for(Venda v : this.vendasMostradas) {
+            this.modelVendas.addElement(String.valueOf(v.getData().getDate() + "/" + (v.getData().getMonth()+1) + "/" + (v.getData().getYear()+1900) + " - " + v.getCliente().getNome()));
+        }
     }
 
     /**
@@ -46,6 +74,7 @@ public class ListarVendasView extends javax.swing.JPanel {
         anoFinal = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         filtrar = new javax.swing.JButton();
+        editar = new javax.swing.JButton();
 
         vendas.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -77,6 +106,18 @@ public class ListarVendasView extends javax.swing.JPanel {
         jLabel8.setText("Data Final:");
 
         filtrar.setText("Filtrar");
+        filtrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarActionPerformed(evt);
+            }
+        });
+
+        editar.setText("Editar");
+        editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -114,7 +155,8 @@ public class ListarVendasView extends javax.swing.JPanel {
                                         .addComponent(anoFinal)))
                                 .addComponent(jLabel8))
                             .addGap(49, 49, 49)
-                            .addComponent(filtrar))))
+                            .addComponent(filtrar))
+                        .addComponent(editar)))
                 .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
@@ -149,8 +191,10 @@ public class ListarVendasView extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editar)
+                .addGap(31, 31, 31))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -158,12 +202,48 @@ public class ListarVendasView extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_diaFinalActionPerformed
 
+    private void filtrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarActionPerformed
+        String di = this.diaInicio.getText();
+        String mi = this.mesInicio.getText();
+        String ai = this.anoInicio.getText();
+        
+        String df = this.diaFinal.getText();
+        String mf = this.mesFinal.getText();
+        String af = this.anoFinal.getText();
+        
+        this.vendasMostradas =  vendaController.buscarPorData(di, mi, ai, df, mf, af);
+        
+        if(di.length() + mi.length() + ai.length() + df.length() + mf.length() + af.length() != 0 && this.vendasMostradas == null) {
+            new AlertMessage("Listar Vendas", "Datas Inválidas");
+        } else {
+            if(this.vendasMostradas == null) {
+                this.vendasMostradas = (ArrayList<Venda>) this.allVendas.clone();
+                updateListaVendas();
+            } else {
+                updateListaVendas();
+            }
+        }
+    }//GEN-LAST:event_filtrarActionPerformed
+
+    private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
+        if(this.vendas.getSelectedIndices().length != 1) {
+            new AlertMessage("Listar Venda", "Selecione 1 venda");
+            return;
+        }
+        
+        int index = this.vendas.getSelectedIndex();
+        Venda venda = this.vendasMostradas.get(index);
+        
+        this.context.updateView(new EditarVendaView(context, venda));
+    }//GEN-LAST:event_editarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField anoFinal;
     private javax.swing.JTextField anoInicio;
     private javax.swing.JTextField diaFinal;
     private javax.swing.JTextField diaInicio;
+    private javax.swing.JButton editar;
     private javax.swing.JButton filtrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

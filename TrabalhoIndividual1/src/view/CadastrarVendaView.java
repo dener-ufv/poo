@@ -285,9 +285,7 @@ public class CadastrarVendaView extends javax.swing.JPanel {
         Cliente cliente = this.arrCliente.get(clienteIndex);
         Endereco endereco = cliente.getEnderecos().get(enderecoIndex);
         Date data = new Date();
-        //LocalDateTime agora = LocalDateTime.now();
-        //String data = agora.getDayOfWeek().toString();;
-        //System.out.println(data);
+        System.out.println(data);
         this.vendaController.adicionarVenda(cliente, endereco, data, this.arrItems);
         new AlertMessage("Cadastrar Venda", "Venda cadastrada com sucesso");
     }//GEN-LAST:event_salvarActionPerformed

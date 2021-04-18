@@ -55,7 +55,7 @@ public class MainView extends javax.swing.JFrame {
         );
         contentPanelLayout.setVerticalGroup(
             contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+            .addGap(0, 283, Short.MAX_VALUE)
         );
 
         jMenu1.setText("Cadastrar");
@@ -104,7 +104,7 @@ public class MainView extends javax.swing.JFrame {
 
         jMenu2.setText("Listar");
 
-        listarCliente.setText("Cliente");
+        listarCliente.setText("Clientes");
         listarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 listarClienteActionPerformed(evt);
@@ -112,7 +112,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jMenu2.add(listarCliente);
 
-        listarProdutos.setText("Produto");
+        listarProdutos.setText("Produtos");
         listarProdutos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 listarProdutosActionPerformed(evt);
@@ -120,7 +120,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jMenu2.add(listarProdutos);
 
-        listarVenda.setText("Venda");
+        listarVenda.setText("Vendas");
         listarVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 listarVendaActionPerformed(evt);
@@ -175,15 +175,15 @@ public class MainView extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastrarTipoDeProdutoActionPerformed
 
     private void listarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarClienteActionPerformed
-        // TODO add your handling code here:
+        this.updateView(new ListarClientesView(this));
     }//GEN-LAST:event_listarClienteActionPerformed
 
     private void listarProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarProdutosActionPerformed
-        
+        this.updateView(new ListarProdutosView(this));
     }//GEN-LAST:event_listarProdutosActionPerformed
 
     private void listarVendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarVendaActionPerformed
-        // TODO add your handling code here:
+        this.updateView(new ListarVendasView(this));
     }//GEN-LAST:event_listarVendaActionPerformed
 
     private void cadastrarCategoriaDeProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarCategoriaDeProdutoActionPerformed

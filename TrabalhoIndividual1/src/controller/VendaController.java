@@ -59,7 +59,7 @@ public class VendaController {
             int m = Integer.parseInt(mes);
             int a = Integer.parseInt(ano);
             
-            data = new Date(a - 1900, m-1, d, 0, 0, 0);
+            data = new Date(a, m-1, d, 0, 0, 0);
         } catch(Exception e) {
             
         }

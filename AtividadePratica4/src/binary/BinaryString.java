@@ -5,12 +5,7 @@
  */
 package binary;
 
-import binary.exceptions.BinaryIndexOutOfBoundsException;
-import binary.exceptions.BinaryDifferentSizeException;
 import binary.exceptions.BinaryInvalidSizeException;
-import java.util.Collection;
-import java.util.Collections;
-
 /**
  *
  * @author dener
@@ -21,23 +16,26 @@ public class BinaryString extends Binary {
     public BinaryString(int size) throws BinaryInvalidSizeException {
         super(size);
         binario = new String();
-        for(int i=0; i<size; i++) {
-            binario += "0";
-        }
+        for(int i=0; i<size; i++) binario += "0";
+    }
+
+    public BinaryString(Binary binario) {
+        super(binario);
+        this.binario = new String();
+        for(int i=0; i<size; i++) this.binario += "0";
+        for(int i=0; i<size; i++) this.internalSetBit(i, binario.internalGetBit(i));
     }
 
     @Override
-    public Binary setBit(int index, int valor) throws BinaryIndexOutOfBoundsException {
-        if(index < 0 || index >= size) throw new BinaryIndexOutOfBoundsException();
+    protected Binary internalSetBit(int index, boolean valor) {
         StringBuilder builder = new StringBuilder(this.binario);
-        builder.setCharAt(index, (char)(valor + '0'));
+        builder.setCharAt(index, valor ? '1' : '0');
         this.binario = builder.toString();
         return this;
     }
 
     @Override
-    public int getBit(int index) throws BinaryIndexOutOfBoundsException {
-        if(index < 0 || index >= size) throw new BinaryIndexOutOfBoundsException();
-        return (this.binario.charAt(index) - '0');
+    protected boolean internalGetBit(int index) {
+        return this.binario.charAt(index) == '1';
     }
 }

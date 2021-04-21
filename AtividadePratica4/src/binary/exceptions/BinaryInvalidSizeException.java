@@ -15,5 +15,11 @@ public class BinaryInvalidSizeException extends Exception {
     public String toString() {
         return "Tamanho inválido";
     }
+
+    @Override
+    public String getMessage() {
+        return "Um binário deve ter pelo menos um bit";
+    }
+    
     
 }

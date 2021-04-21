@@ -15,5 +15,11 @@ public class BinaryIndexOutOfBoundsException extends Exception {
     public String toString() {
         return "Index fora dos limites";
     }
+
+    @Override
+    public String getMessage() {
+        return "Voce deve acessar uma posição entre 0 e TAMANHO-1";
+    }
+    
     
 }

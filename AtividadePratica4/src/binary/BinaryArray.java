@@ -5,8 +5,6 @@
  */
 package binary;
 
-import binary.exceptions.BinaryIndexOutOfBoundsException;
-import binary.exceptions.BinaryDifferentSizeException;
 import binary.exceptions.BinaryInvalidSizeException;
 import java.util.ArrayList;
 
@@ -20,24 +18,24 @@ public class BinaryArray extends Binary {
     public BinaryArray(int size) throws BinaryInvalidSizeException {
         super(size);
         this.binario = new ArrayList<>();
-        for(int i=0; i<size(); i++) this.binario.add(0); 
-        try {
-            for(int i=0; i<size; i++) this.setBit(i, 0);
-        } catch(Exception e) {
-            
-        }
+        for(int i=0; i<size; i++) this.binario.add(0); 
+    }
+    
+    public BinaryArray(Binary binario) {
+        super(binario);
+        this.binario = new ArrayList<>();
+        for(int i=0; i<size; i++) this.binario.add(0);
+        for(int i=0; i<size; i++) this.internalSetBit(i, binario.internalGetBit(i));
     }
     
     @Override
-    public Binary setBit(int index, int valor) throws BinaryIndexOutOfBoundsException {
-        if(index < 0 || index >= size) throw new BinaryIndexOutOfBoundsException();
-        binario.set(index, valor);
+    protected Binary internalSetBit(int index, boolean valor){
+        binario.set(index, valor ? 1 : 0);
         return this;
     }
 
     @Override
-    public int getBit(int index) throws BinaryIndexOutOfBoundsException {
-        if(index < 0 || index >= size) throw new BinaryIndexOutOfBoundsException();
-        return binario.get(index);
+    protected boolean internalGetBit(int index) {
+        return binario.get(index) == 1;
     }
 }

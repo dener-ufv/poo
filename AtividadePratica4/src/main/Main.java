@@ -8,6 +8,9 @@ package main;
 import binary.Binary;
 import binary.BinaryArray;
 import binary.BinaryString;
+import binary.exceptions.BinaryDifferentSizeException;
+import binary.exceptions.BinaryIndexOutOfBoundsException;
+import binary.exceptions.BinaryInvalidSizeException;
 
 /**
  *
@@ -19,17 +22,37 @@ public class Main {
         try {
             Binary b1 = new BinaryArray(10);
             Binary b2 = new BinaryArray(10);
-            Binary b3 = new BinaryString(10);
+            Binary b3 = new BinaryString(11);
             
-            b1.setBit(0, 1);
-            b2.setBit(1, 1);
-            b3.not().setBit(9, 0).setBit(7, 0);
+            b1.setBit(0, true).not().and(b2.setBit(1, true));
+            b3.not().setBit(9, false).setBit(7, false);
             
-            b1.or(b2).not().and(b3);
+            // não gera Excessão, pois um binário já existente é SEMPRE válido 
+            Binary b4 = new BinaryString(b3);
+            b4.not();
             
-            System.out.println(b1);
-        } catch(Exception e) {
-            System.out.println(e);
+            // ative a linha abaixo para obter um BinaryInvalidSizeException
+            // Binary b5 = new BinaryString(0);
+            
+            // ative a linha abaixo para obter um BinaryDifferentSizeException
+            // b1.or(b2).not().and(b3);
+            
+            // ative a linha abaixo para obter um BinaryIndexOutOfBoundsException
+            // b2.setBit(0, true).setBit(10, false);
+            
+            System.out.println(b3);
+            System.out.println(b4);
+        } catch(BinaryInvalidSizeException e) {
+            System.out.println("Excessão 1:");
+            System.out.println(e.getMessage());
+        } catch(BinaryDifferentSizeException e) {
+            System.out.println("Excessão 2:");
+            System.out.println(e.getMessage());
+        } catch(BinaryIndexOutOfBoundsException e) {
+            System.out.println("Excessão 3:");
+            System.out.println(e.getMessage());
+        } finally {
+            System.out.println("FIM!! (executado mesmo em caso de exceptions)");
         }
     }
 }

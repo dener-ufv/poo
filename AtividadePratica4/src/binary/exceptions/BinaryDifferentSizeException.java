@@ -18,7 +18,7 @@ public class BinaryDifferentSizeException extends Exception {
 
     @Override
     public String getMessage() {
-        return super.getMessage(); //To change body of generated methods, choose Tools | Templates.
+        return "Para realizar operações entre binários utilize binarios de mesmo tamanho";
     }
     
 }
